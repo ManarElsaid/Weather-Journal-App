@@ -13,15 +13,47 @@ document.addEventListener('click', performAction);
 
 function performAction(e) {
     e.preventDefault();
+    //
+    const userResponse = document.querySelector("#feelings").value;
     const zipCode = document.querySelector('#zip').value;
-    getData(baseUrl, zipCode, apiKey);
+    getData(baseUrl, zipCode, apiKey)
+    .then(data => {
+        postData('/add', {temp:data.main.temp, date:newDate, userresponse:userResponse})
+    })
+    .then(updatedData => {
+        updateUI();
+    }
+        
+    )
 }
 
 // asynch function to get the weather data
 const getData = async (baseURL, zipCode, key) => {
-    const res = await fetch(`${baseURL}&appid${key}`);
+    const res = await fetch(`${baseURL}${zipCode}&appid${key}`);
 
     try {
         const data = await res.json();
+        console.log(data);
+        return data;
+    }catch(error) {
+        console.log(`error: ${error}`);
+    };
+}
+
+const postData = async (url='', data={}) {
+    const res = await fetch(url, {
+        method: 'post',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    try {
+        const newData = await res.json();
+        return newData;
+    }catch(error){
+        console.log(`error: ${error}`);
     }
 }

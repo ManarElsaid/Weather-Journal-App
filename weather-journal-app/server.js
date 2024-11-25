@@ -34,7 +34,9 @@ app.get('/all', (res, req) => {
 // Add the POST route that adds incoming data to the projectData
 app.post('/add', (res, req) => {
     let data = req.body;
-    projectData["temperature"] = data.temperature;
-    projectData["date"] = data.date;
-    // projectData["user-response"] = data.;
+    projectData = {
+        temp: data.temp,
+        date: data.date,
+        userresponse: data.userresponse,
+    }
 })
