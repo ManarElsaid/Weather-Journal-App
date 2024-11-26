@@ -65,7 +65,7 @@ const updateUI = async () => {
     try {
         const allData = await res.json();
         document.querySelector("#date").innerHTML = allData.date;
-        document.querySelector("#temp").innerHTML = allData.temp;
+        document.querySelector("#temp").innerHTML = Math.round(allData.temp)+ 'degrees';
         document.querySelector("#content").innerHTML = allData.userresponse;
 
     }catch (error) {
