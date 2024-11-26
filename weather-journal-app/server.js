@@ -12,6 +12,10 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.json());
+
+
 // Cors for cross origin allowance
 const cors = require('cors');
 app.use(cors());
@@ -27,16 +31,18 @@ app.listen(port, () => {
 })
 
 // Add the GET route that returns the projectData object
-app.get('/all', (res, req) => {
+app.get('/all', (req, res) => {
     res.send(projectData);
+
 })
 
 // Add the POST route that adds incoming data to the projectData
-app.post('/add', (res, req) => {
+app.post('/add', (req, res) => {
     let data = req.body;
     projectData = {
         temp: data.temp,
         date: data.date,
         userresponse: data.userresponse,
     }
+    res.send(projectData);
 })

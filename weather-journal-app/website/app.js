@@ -9,7 +9,7 @@ let d = new Date();
 let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 // Add an event listener for the element with the id: generate
-document.addEventListener('click', performAction);
+generateBtn.addEventListener('click', performAction);
 
 function performAction(e) {
     e.preventDefault();
@@ -18,7 +18,7 @@ function performAction(e) {
     const zipCode = document.querySelector('#zip').value;
     getData(baseUrl, zipCode, apiKey)
     .then(data => {
-        postData('/add', {temp:data.main.temp, date:newDate, userresponse:userResponse})
+        postData('/add', {temp: data.main.temp, date: newDate, userresponse: userResponse})
     })
     .then(updatedData => {
         updateUI();
@@ -29,7 +29,8 @@ function performAction(e) {
 
 // asynch function to get the weather data
 const getData = async (baseURL, zipCode, key) => {
-    const res = await fetch(`${baseURL}${zipCode}&appid${key}`);
+    const res = await fetch(`${baseURL}${zipCode}&appid=${key}`);
+    // console.log(`${baseURL}${zipCode}&appid=${key}`);
 
     try {
         const data = await res.json();
@@ -40,9 +41,9 @@ const getData = async (baseURL, zipCode, key) => {
     };
 }
 
-const postData = async (url='', data={}) {
-    const res = await fetch(url, {
-        method: 'post',
+const postData = async (url='', data={}) => {
+    const req = await fetch(url, {
+        method: 'POST',
         credentials: 'same-origin',
         headers: {
             'Content-Type': 'application/json',
@@ -51,9 +52,23 @@ const postData = async (url='', data={}) {
     });
 
     try {
-        const newData = await res.json();
+        const newData = await req.json();
         return newData;
     }catch(error){
         console.log(`error: ${error}`);
     }
-}
+};
+
+const updateUI = async () => {
+    const res = await fetch('/all');
+
+    try {
+        const allData = await res.json();
+        document.querySelector("#date").innerHTML = allData.date;
+        document.querySelector("#temp").innerHTML = allData.temp;
+        document.querySelector("#content").innerHTML = allData.userresponse;
+
+    }catch (error) {
+        console.log(`error: ${error}`);
+    }
+};
